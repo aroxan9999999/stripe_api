@@ -1,0 +1,37 @@
+{% extends "product.html" %}
+
+
+{% block product_list %}
+
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px;z-index: 3;
+margin-left: 100px;">
+
+    <!-- First Photo Grid-->
+    <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+        {% for product in products %}
+        <div class="w3-quarter">
+            <div style="background-image: url({{ product.img.url }}), width:100%"></div>
+            <a href="{% url 'item' pk=product.pk %}">
+                <img src="{{ product.img.url }}" alt="Sandwich" style="width:100%">
+            </a>
+            <h3>{{ product.name }}</h3>>
+
+            <a href="#" onclick="add_order('{{product}}')"><p>
+                <form class="like" action="" method="post">
+                    {% csrf_token %}
+                    <input style="display:none;" class="none" type="text" name="order_id" value="{{ product.pk }}">
+                    <button class="w3-button w3-purple" type="submit" id="b{{ order.pk }}">добавить в карзину</button>
+                </form>
+                </p></a>
+            <p>
+                <a href="{% url 'buy' pk=product.pk %}">
+                <button class="w3-button w3-aqua">купить</button>
+                </a>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

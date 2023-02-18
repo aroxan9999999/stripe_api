@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W3.CSS Template</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+.w3-bar-block .w3-bar-item {padding:20px}
+body {margin:0}
+
+.icon-bar {
+  width: 90px;
+  background-color: #555;
+}
+
+.icon-bar a {
+  display: block;
+  text-align: center;
+  padding: 16px;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 36px;
+}
+
+.icon-bar a:hover {
+  background-color: #000;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  margin-top: 1px;
+  text-decoration: none;
+  font-size: 35px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+    </style>
+</head>
+<body>
+
+<div id="mySidebar2" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    {% for o_r in orders %}
+    <h1>{{ o_r.img.url }}</h1>
+    <div id='{{ o_r.id }}' style="text-align: center; width: 288px; height: 390px">
+        <form class="like" action="" method="post">
+            {% csrf_token %}
+            <input style="display:none;" class="none" type="text" name="del_order_id" value="{{ o_r.pk }}">
+            <a href="#" onclick="closeproduct('{{ order.id }}')">
+                <button class="w3-button w3-purple" type="submit" id="b{{ order.pk }}">x</button>
+            </a>
+        </form>
+        <div style=" z-index: 10; margin-top: 0px; height:250px; width:250px; border: 2px solid white; margin-left: 13px; padding-bottom: 0px;
+         background-image: url({{ o_r.img.url }});
+         background-repeat: no-repeat;
+         background-position: center;
+         background-size: contain;;">
+        </div>
+        <p style="text-align: center">
+            <a href="{% url 'buy' pk=o_r.pk %}">
+            <button styile="margin-top: 0px;" class="w3-button w3-aqua">купить{{ o_r.get_price }}</button>
+            </a>
+        </p>
+    </div>
+    {% endfor %}
+    <a href="{% url 'buy_order' %}">
+    <button style="margin-top: 22px;" class="w3-button w3-aqua">купить {{ order.get_price }} $</button>
+    </a>
+</div>
+
+<div class="icon-bar" style="position: absolute;z-index: 2" id="main">
+    <a class="active" href="#"><i class="fa fa-home"></i></a>
+    <a href="#" onclick="w3_open()"> <i class="fa fa-search"></i></a>
+    <a href="#"><i class="fa fa-envelope"></i></a>
+    <a href="#"><i class="fa fa-globe"></i></a>
+    <a href="#"><i class="fa fa-globe "></i></a>
+    <a href="#" onclick="openNav()"><i class="fa fa-trash"></i></a>
+</div>
+<!-- Sidebar (hidden by default) -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left"
+     style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
+    <a style="margin-left: 499px;" href="javascript:void(0)" onclick="w3_close()"
+       class="w3-bar-item w3-button">close</a>
+    {% for product in products %}
+    <a href="{% url 'category' pk=product.category.pk %}" onclick="w3_close()" class="w3-bar-item w3-button">{{ product.category.name }}</a>
+    {% endfor %}
+</nav>
+
+<!-- Top menu -->
+{% block product_list %}
+{% endblock %}
+
+{% block product_detail %}
+{% endblock %}
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+  closeNav();
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+function openNav() {
+  document.getElementById("mySidebar2").style.width = "300px";
+  document.getElementById("main").style.marginLeft = "300px";
+
+
+}
+
+function closeNav() {
+  document.getElementById("mySidebar2").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+
+function closeproduct(pk) {
+  const element = document.getElementById(pk);
+  console.log(pk)
+  element?.remove();
+}
+
+function add_order(product) {
+    console.log('{{ order.order_id}}');
+
+}
+
+
+
+
+
+</script>
+</body>
+</html>

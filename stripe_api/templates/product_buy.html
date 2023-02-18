@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buy cool new product</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<section>
+    <div class="product">
+        <img src="{{ photo }}" alt="The cover of Stubborn Attachments"/>
+        <div class="description">
+            {% if item %}
+
+            <h3>{{ item.name }}</h3>
+            <h5>${{ item.get_price }}</h5>
+            {% elif order %}
+            {% for obj in order.products.all %}
+            <h3>{{ obj.name }} - {{ obj.get_price }} $</h3>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <form action='/session/{% if not order %}{{ item.pk }}{% endif %}' method="POST">
+        {% csrf_token %}
+        <button type="submit" id="checkout-button">купить {% if item %}{{ item.get_price }}{% else %} {{ order.get_price }}{% endif %} $
+        </button>
+    </form>
+</section>
+</body>
+</html>

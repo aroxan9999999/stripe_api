@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>Succes</h1>
+{% if product_all %}
+	{% for p in product_all %}
+	          <div class="w3-quarter">
+            <div style="background-image: url({{ product.img.url }}), width:100%"></div>
+            <a href="{% url 'item' pk=product.pk %}">
+                <img src="{{ p.img.url }}" alt="Sandwich" style="width:100%">
+            </a>
+            <h3>{{ p.name }}</h3>>
+            <p>
+            </p>
+        </div>
+    {% elif product %}
+          <div class="w3-quarter">
+            <div style="background-image: url({{ product.img.url }}), width:100%"></div>
+            <a href="{% url 'item' pk=product.pk %}">
+                <img src="{{ p.img.url }}" alt="Sandwich" style="width:100%">
+            </a>
+            <h3>{{ p.name }}</h3>>
+            <p>
+            </p>
+        </div>
+	{% endfor %}
+
+{% endif %}
+
+</body>
+</html>
