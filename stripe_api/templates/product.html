@@ -111,8 +111,8 @@ body {
      style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
     <a style="margin-left: 499px;" href="javascript:void(0)" onclick="w3_close()"
        class="w3-bar-item w3-button">close</a>
-    {% for product in products %}
-    <a href="{% url 'category' pk=product.category.pk %}" onclick="w3_close()" class="w3-bar-item w3-button">{{ product.category.name }}</a>
+    {% for category in categories %}
+    <a href="{% url 'category' pk=category.pk %}" onclick="w3_close()" class="w3-bar-item w3-button">{{ category.name }}</a>
     {% endfor %}
 </nav>
 

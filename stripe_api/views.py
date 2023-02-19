@@ -85,9 +85,10 @@ def product_list(request) -> Item:
         except Exception:
             pass
     product = Item.objects.select_related("currency", 'category').all()
-    orders = __order.products.all()
+    orders = __order.products.select_related("category").all()
+    category = set(category.category for category in orders)
     return render(request, template_name='product_list.html',
-                  context={"products": product, "orders": orders, "order": __order})
+                  context={"products": product, "orders": orders, "order": __order, "categories": category})
 
 
 def product_detail(request, pk):
@@ -109,5 +110,6 @@ def category_list(request, pk):
     __order = Order.objects.get(user=request.user)
     orders = __order.products.all()
     item = orders[0]
+    category = set(category.category for category in orders)
     return render(request, template_name='product_list.html',
-                  context={"products": product, "orders": orders, "order": __order, "item": item})
+                  context={"products": product, "orders": orders, "order": __order, "item": item, "categories": category})
