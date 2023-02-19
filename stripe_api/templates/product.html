@@ -88,13 +88,13 @@ body {
         </div>
         <p style="text-align: center">
             <a href="{% url 'buy' pk=o_r.pk %}">
-            <button styile="margin-top: 0px;" class="w3-button w3-aqua">купить{{ o_r.get_price }}</button>
+            <button styile="margin-top: 0px;" class="w3-button w3-aqua">купить{{ o_r.get_price }} $</button>
             </a>
         </p>
     </div>
     {% endfor %}
     <a href="{% url 'buy_order' %}">
-    <button style="margin-top: 22px;" class="w3-button w3-aqua">купить {{ order.get_price }} $</button>
+    <button style="margin-top: 22px; max-width: 275px;font-size: 23px;" class="w3-button w3-aqua">купить {{ order.get_price }} $</button>
     </a>
 </div>
 

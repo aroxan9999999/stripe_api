@@ -17,7 +17,7 @@ def succesView(request):
         all_product = __order = Order.objects.filter(user=request.user)
         user_buy_to_carsine_all["many"] = False
         return render(request, template_name='succes.html',
-                      context={"product_all": user_buy_to_carsine_all.get("many")})
+                      context={"product_all": all_product})
     return render(request, template_name='succes.html', context={"product": user_buy_to_carsine_all.get("item")})
 
 
