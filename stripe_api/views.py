@@ -8,24 +8,29 @@ import stripe
 
 from stripe_api.models import Order, Item
 
-user_buy_to_carsine_all = {"many": False, "item": False}
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def succesView(request):
-    if user_buy_to_carsine_all["many"]:
-        all_product = __order = Order.objects.filter(user=request.user)
-        user_buy_to_carsine_all["many"] = False
+    __order = Order.objects.get(user=request.user)
+    if __order.many:
+        __order.many = False
+        __order.save()
         return render(request, template_name='succes.html',
-                      context={"product_all": all_product})
-    return render(request, template_name='succes.html', context={"product": user_buy_to_carsine_all.get("item")})
+                      context={"product_all": __order})
+    pk = __order.item_pk
+    item = Item.objects.get(pk=pk)
+    return render(request, template_name='succes.html', context={"product": item})
 
 
-class CancelView(TemplateView):
-    template_name = 'cancel.html'
-    user_buy_to_carsine_all["item"] = False
-    if user_buy_to_carsine_all["many"]:
-        user_buy_to_carsine_all["many"] = False
+def cancelview(request):
+    __order = Order.objects.get(user=request.user)
+    if __order.many:
+        __order.many = False
+    else:
+        __order.item = 'null'
+    __order.save()
+    return render(request, template_name='cancel.html')
 
 
 def productbuyview(request, pk):
@@ -37,27 +42,30 @@ def productbuyview(request, pk):
 
 class CreateCheckoutSession(View):
     def post(self, request, *args, **kwargs):
+        __order = Order.objects.prefetch_related("products").get(user=request.user)
         order = None
         product = None
-        pk = self.kwargs.get("pk")
-        print(pk)
+        pk = kwargs.get("pk")
         if pk:
-            order = True
             product = Item.objects.get(pk=pk)
-            user_buy_to_carsine_all["item"] = product
+            currency = product.currency
+            __order.item_pk = product.pk
         else:
-            __order = Order.objects.filter(user=request.user)
-            products = __order[0].products.all()
-            user_buy_to_carsine_all["many"] = products
-        price = int(product.price) if product else sum([int(d_price.price) for d_price in __order[0].products.all()]+[0])
+            order = True
+            products = __order.products.all()
+            currency = products[0].currency
+            __order.many = True
+        __order.save()
+        price = int(product.price) if product else sum(
+            [int(d_price.price) for d_price in __order.products.all()] + [0])
 
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    "price_data": {'unit_amount': price, 'currency': f"usd",
+                    "price_data": {'unit_amount': price, 'currency': f"{currency}",
                                    'product_data': {
                                        'name': product.name if product else '\n'.join([_p.name for _p in products]),
-                                       }
+                                   }
                                    },
                     'quantity': 1,
                 },
@@ -99,6 +107,8 @@ def product_detail(request, pk):
 
 def order(request):
     __order = Order.objects.filter(user=request.user)
+    __order[0].many = True
+    __order[0].save()
     context = {"order": __order[0], 'item_order': __order[0]}
     photo = __order[0].products.filter().first().img.url
     context["photo"] = photo
@@ -112,4 +122,5 @@ def category_list(request, pk):
     item = orders[0]
     category = set(category.category for category in orders)
     return render(request, template_name='product_list.html',
-                  context={"products": product, "orders": orders, "order": __order, "item": item, "categories": category})
+                  context={"products": product, "orders": orders, "order": __order, "item": item,
+                           "categories": category})

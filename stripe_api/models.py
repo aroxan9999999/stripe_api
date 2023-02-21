@@ -28,6 +28,8 @@ class Order(models.Model):
     products = models.ManyToManyField(Item)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(user, on_delete=models.PROTECT)
+    many = models.BooleanField(default=False, editable=False)
+    item_pk = models.IntegerField(default=0, editable=False)
 
     def __str__(self):
         return ' '.join([p.name for p in self.products.all()])

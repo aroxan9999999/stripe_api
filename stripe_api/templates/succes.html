@@ -7,7 +7,7 @@
 <body>
 <h1>Succes</h1>
 {% if product_all %}
-	{% for p in product_all.0.products.all %}
+	{% for p in product_all.products.all %}
 	          <div class="w3-quarter">
             <div style="background-image: url({{ product.img.url }}), width:100%"></div>
                 <img style='height: 300px; width: 250px;' src="{{ p.img.url }}" alt="Sandwich">
@@ -20,9 +20,9 @@
           <div class="w3-quarter">
             <div style="background-image: url({{ product.img.url }}), width:100%"></div>
             <a href="{% url 'item' pk=product.pk %}">
-                <img src="{{ p.img.url }}" alt="Sandwich" style="width:100%">
+                <img style='width: 49%' src="{{ product.img.url }}" alt="Sandwich" style="width:100%">
             </a>
-            <h3>{{ p.name }}</h3>>
+            <h3>{{ product.name }}</h3>>
             <p>
             </p>
         </div>
