@@ -5,13 +5,14 @@
     <title></title>
 </head>
 <body>
+<a href="{% url 'list' %}" style="font-size:39px; text-decoration:none; color:green;"><<<</a>
 <h1>Succes</h1>
 {% if product_all %}
-	{% for p in product_all.products.all %}
+	{% for p in product_all %}
 	          <div class="w3-quarter">
-            <div style="background-image: url({{ product.img.url }}), width:100%"></div>
-                <img style='height: 300px; width: 250px;' src="{{ p.img.url }}" alt="Sandwich">
-            <h3>{{ p.name }}</h3>>
+            <div style="background-image: url({{ p.1 }}), width:100%"></div>
+                <img style='height: 300px; width: 250px;' src="{{ p.1 }}" alt="Sandwich">
+            <h3>{{ p.0 }}</h3>>
             <p>
             </p>
         </div>

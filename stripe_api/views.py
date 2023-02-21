@@ -12,12 +12,14 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def succesView(request):
-    __order = Order.objects.get(user=request.user)
+    __order = Order.objects.prefetch_related("products").get(user=request.user)
     if __order.many:
         __order.many = False
         __order.save()
+        order = [f"{item.name}|{item.img.url}".split('|') for item in __order.products.all()]
+        [__order.products.remove(item) for item in __order.products.all()]
         return render(request, template_name='succes.html',
-                      context={"product_all": __order})
+                      context={"product_all": order})
     pk = __order.item_pk
     item = Item.objects.get(pk=pk)
     return render(request, template_name='succes.html', context={"product": item})
@@ -28,7 +30,7 @@ def cancelview(request):
     if __order.many:
         __order.many = False
     else:
-        __order.item = 'null'
+        __order.item_pk = 0
     __order.save()
     return render(request, template_name='cancel.html')
 
